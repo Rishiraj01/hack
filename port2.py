@@ -4,7 +4,6 @@ import pprint
 import socket
 import requests
 import ssl
-from pprint import pformat
 
 nm=nmap.PortScanner()
 host = input('Enter website to be scanned : ')
@@ -17,10 +16,12 @@ nm.scan(ip_addr, '21-443','-sS')
 print('Operating System: ')
 data=nm.scan(ip_addr, arguments="-O")['scan'][ip_addr]['osmatch'][1]
 result = '\n'.join(f'{key}: {value}' for key, value in data.items())
+
+chars_to_remove = ["{", "}", "'",]
+for char in chars_to_remove:
+    result = result.replace(char, "")
 print(result)
-
-
-
+print("----------")
 response = requests.get(f'https://ipapi.co/{ip_addr}/json/').json()
 location_data = {
         "Ip": ip_addr,
