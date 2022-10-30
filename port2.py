@@ -9,6 +9,7 @@ nm=nmap.PortScanner()
 host = input('Enter website to be scanned : ')
 ip_addr = socket.gethostbyname(host)
 nm.scan(ip_addr, '21-443','-sS')
+print('Operating System: ')
 pprint.pprint(nm.scan(ip_addr, arguments="-O")['scan'][ip_addr]['osmatch'][1])
 response = requests.get(f'https://ipapi.co/{ip_addr}/json/').json()
 location_data = {
