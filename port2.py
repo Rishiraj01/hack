@@ -3,11 +3,15 @@ import nmap
 import pprint
 import socket
 import requests
-
+import ssl
 
 nm=nmap.PortScanner()
 host = input('Enter website to be scanned : ')
 ip_addr = socket.gethostbyname(host)
+context = ssl.create_default_context()
+with socket.create_connection((host, 443)) as sock:
+    with context.wrap_socket(sock, server_hostname=host) as ssock:
+        print(ssock.version())
 nm.scan(ip_addr, '21-443','-sS')
 print('Operating System: ')
 pprint.pprint(nm.scan(ip_addr, arguments="-O")['scan'][ip_addr]['osmatch'][1])
