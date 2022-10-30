@@ -4,6 +4,7 @@ import pprint
 import socket
 import requests
 import ssl
+from pprint import pformat
 
 nm=nmap.PortScanner()
 host = input('Enter website to be scanned : ')
@@ -14,15 +15,21 @@ with socket.create_connection((host, 443)) as sock:
         print("TLS Version: ",ssock.version())
 nm.scan(ip_addr, '21-443','-sS')
 print('Operating System: ')
-pprint.pprint(nm.scan(ip_addr, arguments="-O")['scan'][ip_addr]['osmatch'][1])
+data=nm.scan(ip_addr, arguments="-O")['scan'][ip_addr]['osmatch'][1]
+result = '\n'.join(f'{key}: {value}' for key, value in data.items())
+print(result)
+
+
+
 response = requests.get(f'https://ipapi.co/{ip_addr}/json/').json()
 location_data = {
-        "ip": ip_addr,
-        "city": response.get("city"),
-        "region": response.get("region"),
-        "country": response.get("country_name")
+        "Ip": ip_addr,
+        "City": response.get("city"),
+        "Region": response.get("region"),
+        "Country": response.get("country_name")
     }
-pprint.pprint(location_data)
+print('\n'.join(f'{key}: {value}' for key, value in location_data.items()))
+
 for host in nm.all_hosts():
     print('Host : %s (%s)' % (host, nm[host].hostname()))
     print('State : %s' % nm[host].state())
